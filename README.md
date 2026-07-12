@@ -27,3 +27,23 @@ Output Directory: оставить пустым
 ## Локальная проверка
 
 Можно открыть `mini-app/index.html` в браузере. Telegram API полностью сработает только внутри Telegram.
+
+## Подключение кнопки бота
+
+Создай локальный файл `.env` по примеру `.env.example`:
+
+```text
+BOT_TOKEN=1234567890:your_bot_token
+WEB_APP_URL=https://your-vercel-app.vercel.app
+MENU_TEXT=Open Mini App
+```
+
+Файл `.env` уже добавлен в `.gitignore`, его не нужно коммитить.
+
+После этого запусти:
+
+```bash
+node scripts/set-menu-button.mjs
+```
+
+Скрипт проверит бота через `getMe` и установит кнопку меню через `setChatMenuButton`.
