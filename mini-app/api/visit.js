@@ -35,7 +35,6 @@ module.exports = async function handler(req, res) {
       .trim() || "Unknown";
 
     const record = {
-      id,
       name,
       last_seen: now.toISOString()
     };
