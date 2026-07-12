@@ -1,19 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Mini App</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0d211b">
+  <title>Tiny Terrarium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mood.css">
+  <link rel="stylesheet" href="sprite.css?v=2">
+  <link rel="stylesheet" href="ashtray.css?v=1">
+  <link rel="stylesheet" href="ashtray-position.css?v=1">
+  <link rel="stylesheet" href="animations.css?v=6">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <main class="app">
-    <h1>Привіт із Telegram</h1>
-    <p id="userInfo" class="user-info">Відкрий застосунок через Telegram, щоб побачити дані користувача.</p>
-    <button id="btn" type="button">Натисни</button>
-  </main>
+  <main class="app-shell">
+    <section class="screen active" id="homeScreen">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" data-i18n="terrarium">ТЕРАРІУМ 01</p>
+          <h1>Tiny<br>Terrarium</h1>
+        </div>
+        <button class="profile" type="button" aria-label="Профіль" data-open-settings><span>YK</span><i></i></button>
+      </header>
 
-  <script src="app.js"></script>
+      <article class="habitat-card">
+        <img src="assets/terrarium-ashtray.png" alt="Квакі у занедбаному тераріумі">
+        <div class="habitat-shade"></div>
+        <div class="pet-sprite anim-idle" aria-hidden="true"></div>
+        <div class="ashtray-pile" id="ashtrayPile" aria-live="polite"></div>
+        <div class="weather"><span class="sun-mark"></span><b>18°</b><small data-i18n="weather">Сутінки</small></div>
+        <div class="pet-title">
+          <div><span class="status-dot"></span><small id="petStateText">Вона чекала на тебе</small></div>
+          <h2>Квакі</h2>
+          <p><span data-i18n="species">Деревна жаба</span> · <span data-i18n="level">Рівень</span> <b id="level">7</b></p>
+        </div>
+      </article>
+
+      <section class="stats" aria-label="Стан улюбленця">
+        <div class="section-heading"><h3 data-i18n="today">Сьогодні</h3><span id="timeLabel" data-i18n="updated">Щойно оновлено</span></div>
+        <div class="stat-grid">
+          <div class="stat" data-stat="hunger"><span class="stat-symbol food-symbol"></span><div><small data-i18n="satiety">СИТІСТЬ</small><strong><span id="hungerValue">64</span>%</strong></div><div class="meter"><i id="hungerMeter"></i></div></div>
+          <div class="stat" data-stat="moisture"><span class="stat-symbol drop-symbol"></span><div><small data-i18n="moisture">ВОЛОГІСТЬ</small><strong><span id="moistureValue">82</span>%</strong></div><div class="meter"><i id="moistureMeter"></i></div></div>
+          <div class="stat loneliness" data-stat="mood"><span class="stat-symbol mood-symbol"></span><div><small data-i18n="will">ВОЛЯ ЖИТИ</small><strong><span id="moodValue">76</span>%</strong></div><div class="meter"><i id="moodMeter"></i></div></div>
+          <div class="stat" data-stat="health"><span class="stat-symbol health-symbol"></span><div><small data-i18n="health">ЗДОРОВ’Я</small><strong><span id="healthValue">95</span>%</strong></div><div class="meter"><i id="healthMeter"></i></div></div>
+        </div>
+      </section>
+
+      <section class="care">
+        <div class="section-heading"><h3 data-i18n="care">Не залишай її</h3><span data-i18n="actionsAvailable">4 дії доступно</span></div>
+        <div class="actions">
+          <button data-action="feed"><span class="action-art fly-art"><i></i></span><b data-i18n="feed">Годувати</b><small data-i18n="insects">Комахи</small></button>
+          <button data-action="water"><span class="action-art mist-art"><i></i></span><b data-i18n="water">Зволожити</b><small data-i18n="mist">Туман</small></button>
+          <button data-action="play"><span class="action-art play-art"><i></i></span><b data-i18n="stay">Побути поруч</b><small data-i18n="talk">Тиха розмова</small></button>
+          <button data-action="clean"><span class="action-art clean-art"><i></i></span><b data-i18n="clean">Прибрати</b><small data-i18n="home">Її дім</small></button>
+        </div>
+      </section>
+    </section>
+
+    <section class="screen page" id="shopScreen">
+      <header class="page-head"><p class="eyebrow">ЗАПАСИ</p><h2>Крамниця</h2><p>Делікатеси та догляд для Квакі.</p></header>
+      <div class="balance"><span>Ваш баланс</span><strong><i></i><b id="coins">240</b> листків</strong></div>
+      <div class="shop-grid">
+        <article><div class="product larva"></div><small>ПОЖИВНА</small><h3>Личинка</h3><p>Ситість +30</p><button data-buy="larva" data-price="40">40 листків</button></article>
+        <article><div class="product cricket"></div><small>УЛЮБЛЕНА</small><h3>Цвіркун</h3><p>Ситість +45</p><button data-buy="cricket" data-price="65">65 листків</button></article>
+        <article><div class="product moss"></div><small>ДЕКОР</small><h3>М’який мох</h3><p>Настрій +20</p><button data-buy="moss" data-price="90">90 листків</button></article>
+        <article><div class="product mister"></div><small>ДОГЛЯД</small><h3>Дрібний туман</h3><p>Вологість +35</p><button data-buy="mister" data-price="55">55 листків</button></article>
+      </div>
+    </section>
+
+    <section class="screen page" id="collectionScreen">
+      <header class="page-head"><p class="eyebrow">АРХІВ ВИДІВ</p><h2>Колекція</h2><p>1 із 12 видів уже живе у вашому заповіднику.</p></header>
+      <div class="collection-hero"><img src="assets/terrarium-frog.png" alt="Деревна жаба"><div><small>ЗНАЙДЕНО</small><h3>Деревна жаба</h3><p>Звичайний вид · рівень 7</p></div></div>
+      <div class="locked-list"><article><span>02</span><div><h3>Золота листова</h3><p>Відкриється на 15 рівні</p></div></article><article><span>03</span><div><h3>Туманна жаба</h3><p>Невідомі умови</p></div></article><article><span>04</span><div><h3>Малий гекон</h3><p>Нове яйце</p></div></article></div>
+    </section>
+
+    <section class="screen page settings-page" id="settingsScreen">
+      <header class="page-head"><p class="eyebrow" data-i18n="preferences">ОСОБИСТЕ</p><h2 data-i18n="settings">Налаштування</h2><p data-i18n="settingsIntro">Зміни мову та правила цієї історії.</p></header>
+      <div class="setting-card"><div><small data-i18n="language">МОВА</small><h3 data-i18n="languageTitle">Мова гри</h3><p data-i18n="languageHint">Спочатку визначається через Telegram.</p></div><div class="language-switch"><button type="button" data-lang="uk">УКР</button><button type="button" data-lang="ru">РУС</button></div></div>
+      <div class="setting-card quiet-card"><div><small data-i18n="aboutState">ПРО СТАН</small><h3 data-i18n="lonelinessTitle">Самотність реальна</h3><p data-i18n="lonelinessText">Коли тебе довго немає, воля Квакі згасає. Повертайся, говори з нею і не дай тиші перемогти.</p></div></div>
+      <button class="reset-button" type="button" id="resetProgress" data-i18n="reset">Почати історію спочатку</button>
+    </section>
+
+    <nav class="bottom-nav" aria-label="Навігація">
+      <button class="active" data-screen="homeScreen"><span class="nav-home"></span><b>Дім</b></button>
+      <button data-screen="shopScreen"><span class="nav-shop"></span><b>Крамниця</b></button>
+      <button data-screen="collectionScreen"><span class="nav-collection"></span><b>Колекція</b></button>
+      <button data-screen="settingsScreen"><span class="nav-settings"></span><b data-i18n="settingsNav">Опції</b></button>
+    </nav>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
