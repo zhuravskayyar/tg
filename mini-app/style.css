@@ -48,3 +48,85 @@ button {
 button:active {
   transform: translateY(1px);
 }
+
+.admin {
+  width: min(100%, 820px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-login {
+  display: grid;
+  gap: 10px;
+  max-width: 420px;
+}
+
+.admin-login label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--tg-theme-hint-color, #c7cbd1);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--tg-theme-text-color, #151515);
+  background: var(--tg-theme-secondary-bg-color, #ffffff);
+}
+
+.small-button {
+  width: auto;
+  min-width: 104px;
+  padding: 0 14px;
+}
+
+.admin-table {
+  overflow-x: auto;
+  border: 1px solid #d9dde3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #edf0f3;
+}
+
+th {
+  font-size: 13px;
+  color: #5b6572;
+  background: #f7f8fa;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (max-width: 560px) {
+  .admin-header {
+    flex-direction: column;
+  }
+
+  .small-button {
+    width: 100%;
+  }
+}

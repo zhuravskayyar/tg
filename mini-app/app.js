@@ -10,15 +10,37 @@ if (tg) {
 
   if (user) {
     const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
-    userInfo.textContent = `ID: ${user.id} | Имя: ${name || "без имени"}`;
+    userInfo.textContent = `ID: ${user.id} | Імʼя: ${name || "без імені"}`;
   }
+
+  recordVisit();
 }
 
 button.addEventListener("click", () => {
   if (tg) {
-    tg.showAlert("Работает!");
+    tg.showAlert("Працює!");
     return;
   }
 
-  alert("Работает! Открой через Telegram, чтобы проверить Mini App API.");
+  alert("Працює! Відкрий через Telegram, щоб перевірити Mini App API.");
 });
+
+async function recordVisit() {
+  if (!tg?.initData) {
+    return;
+  }
+
+  try {
+    await fetch("/api/visit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        initData: tg.initData
+      })
+    });
+  } catch (error) {
+    console.error("Visit tracking failed", error);
+  }
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Mini App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="admin">
+    <section class="admin-header">
+      <div>
+        <h1>Користувачі</h1>
+        <p id="adminStatus" class="user-info">Увійди, щоб переглянути останні заходи.</p>
+      </div>
+      <button id="refreshBtn" class="small-button" type="button" hidden>Оновити</button>
+    </section>
+
+    <form id="loginForm" class="admin-login">
+      <label for="passwordInput">Пароль адміністратора</label>
+      <input id="passwordInput" type="password" autocomplete="current-password" required>
+      <button type="submit">Увійти</button>
+    </form>
+
+    <section id="tableSection" class="admin-table" hidden>
+      <table>
+        <thead>
+          <tr>
+            <th>Імʼя</th>
+            <th>Останній захід</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

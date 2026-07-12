@@ -1,36 +1,56 @@
 # Telegram Mini App
 
-Минимальное статическое приложение для Telegram Mini Apps.
+Мінімальний Telegram Mini App з адмін-панеллю для перегляду імені користувача та часу останнього заходу.
 
-## Деплой на Vercel через GitHub
+## Деплой на Vercel
 
-1. Создай новый репозиторий на GitHub.
-2. Подключи его как remote:
-
-```bash
-git remote add origin https://github.com/USERNAME/REPOSITORY.git
-git push -u origin main
-```
-
-3. В Vercel выбери `Add New...` -> `Project` -> импортируй GitHub-репозиторий.
-4. В настройках проекта укажи:
+У Vercel імпортуй GitHub-репозиторій і вкажи:
 
 ```text
 Root Directory: mini-app
 Framework Preset: Other
-Build Command: оставить пустым
-Output Directory: оставить пустым
+Build Command: залишити пустим
+Output Directory: залишити пустим
 ```
 
-5. После деплоя скопируй HTTPS-адрес Vercel и укажи его в BotFather через `/newapp`.
+Після деплою вкажи HTTPS-адресу Vercel у BotFather через `/newapp`.
 
-## Локальная проверка
+## Змінні середовища
 
-Можно открыть `mini-app/index.html` в браузере. Telegram API полностью сработает только внутри Telegram.
+Для роботи відстеження потрібні змінні у Vercel Project Settings -> Environment Variables:
 
-## Подключение кнопки бота
+```text
+BOT_TOKEN=1234567890:your_bot_token
+ADMIN_PASSWORD=your_admin_password
+UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_redis_token
+```
 
-Создай локальный файл `.env` по примеру `.env.example`:
+Також підтримуються назви Vercel KV:
+
+```text
+KV_REST_API_URL=...
+KV_REST_API_TOKEN=...
+```
+
+`BOT_TOKEN` потрібен, щоб API перевіряв справжність Telegram `initData`. `ADMIN_PASSWORD` потрібен для входу в адмін-панель. Redis потрібен для збереження останнього заходу користувача.
+
+## Адмін-панель
+
+Після деплою адмінка буде доступна за адресою:
+
+```text
+https://your-vercel-app.vercel.app/admin.html
+```
+
+Вона показує тільки:
+
+- імʼя користувача
+- час останнього заходу
+
+## Кнопка Mini App у боті
+
+Створи локальний файл `.env` по прикладу `.env.example`:
 
 ```text
 BOT_TOKEN=1234567890:your_bot_token
@@ -38,12 +58,12 @@ WEB_APP_URL=https://your-vercel-app.vercel.app
 MENU_TEXT=Open Mini App
 ```
 
-Файл `.env` уже добавлен в `.gitignore`, его не нужно коммитить.
+Файл `.env` уже доданий у `.gitignore`, його не потрібно комітити.
 
-После этого запусти:
+Після цього запусти:
 
 ```bash
 node scripts/set-menu-button.mjs
 ```
 
-Скрипт проверит бота через `getMe` и установит кнопку меню через `setChatMenuButton`.
+Скрипт перевірить бота через `getMe` і встановить кнопку меню через `setChatMenuButton`.
