@@ -52,6 +52,10 @@ let state = { ...defaults, ...storedState };
 const t = key => dictionary[state.lang]?.[key] || dictionary.uk[key] || key;
 const clamp = value => Math.max(0, Math.min(100, value));
 const sprite = document.querySelector(".pet-sprite");
+const stateNames = new Set(["idle", "drink", "read", "smoke", "sleep"]);
+const stateSheets = Object.fromEntries([...stateNames].map(name => [name,
+  Array.from({ length: 4 }, (_, index) => `assets/frog/final-56/${name}/${name}-part-${index + 1}.png`)
+]));
 
 const animationDurations = {
   idle: 15000,
@@ -66,24 +70,25 @@ const animationDurations = {
   "sleep-to-idle": 500
 };
 const animationFiles = {
-  idle: "assets/frog/final-28/idle-28.png",
   "idle-to-drink": "assets/frog/doubled/idle-to-drink-12.png",
-  drink: "assets/frog/final-28/drink-28.png",
   "drink-to-read": "assets/frog/doubled/drink-to-read-12.png",
-  read: "assets/frog/final-28/read-28.png",
   "read-to-smoke": "assets/frog/doubled/read-to-smoke-12.png",
-  smoke: "assets/frog/final-28/smoke-28.png",
   "smoke-to-sleep": "assets/frog/doubled/smoke-to-sleep-12.png",
-  sleep: "assets/frog/final-28/sleep-28.png",
   "sleep-to-idle": "assets/frog/doubled/sleep-to-idle-12.png"
 };
 
-Object.values(animationFiles).forEach(src => { const image = new Image(); image.src = src; });
+Object.values(animationFiles).forEach(src => {
+  const image = new Image();
+  image.src = src;
+});
 
 let animationQueue = [];
 let animationRunning = false;
 let currentAnimation = null;
 let animationTimer;
+let spriteFrameTimer;
+let activeSheetImages = [];
+let spritePlaybackToken = 0;
 let sequenceTimer;
 let toastTimer;
 let sequenceIndex = 0;
@@ -177,10 +182,50 @@ function notify(message) {
   tg?.HapticFeedback?.impactOccurred("light");
 }
 
+function stopSpriteFrames() {
+  clearInterval(spriteFrameTimer);
+  spriteFrameTimer = null;
+  activeSheetImages = [];
+  spritePlaybackToken += 1;
+}
+
+function startSpriteFrames(name) {
+  const sheets = stateSheets[name];
+  const playbackToken = spritePlaybackToken;
+  let frame = 0;
+  const drawFrame = () => {
+    const sheetIndex = Math.floor(frame / 14);
+    const frameInSheet = frame % 14;
+    sprite.style.backgroundImage = `url("${sheets[sheetIndex]}")`;
+    sprite.style.backgroundSize = "1400% 100%";
+    sprite.style.backgroundPosition = `${(frameInSheet / 13) * 100}% 0`;
+    frame = (frame + 1) % 56;
+  };
+  const beginPlayback = () => {
+    if (playbackToken !== spritePlaybackToken || spriteFrameTimer) return;
+    drawFrame();
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      spriteFrameTimer = setInterval(drawFrame, 1000 / 24);
+    }
+  };
+  activeSheetImages = sheets.map(src => {
+    const image = new Image();
+    image.src = src;
+    return image;
+  });
+  if (activeSheetImages[0].complete) beginPlayback();
+  else activeSheetImages[0].addEventListener("load", beginPlayback, { once: true });
+}
+
 function setSpriteAnimation(name = "idle") {
+  stopSpriteFrames();
   sprite.className = "pet-sprite";
+  sprite.style.backgroundImage = "";
+  sprite.style.backgroundSize = "";
+  sprite.style.backgroundPosition = "";
   void sprite.offsetWidth;
   sprite.classList.add(`anim-${name}`);
+  if (stateNames.has(name)) startSpriteFrames(name);
 }
 
 function runNextAnimation() {
@@ -316,6 +361,7 @@ document.querySelectorAll("[data-buy]").forEach(button => button.addEventListene
 decay();
 applyLanguage();
 render();
+setSpriteAnimation("idle");
 scheduleNextSequenceStep(1800);
 
 if (tg?.initData) {
