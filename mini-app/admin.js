@@ -5,6 +5,11 @@ const adminStatus = document.getElementById("adminStatus");
 const refreshBtn = document.getElementById("refreshBtn");
 const tableSection = document.getElementById("tableSection");
 const usersBody = document.getElementById("usersBody");
+const messageSection = document.getElementById("messageSection");
+const messageForm = document.getElementById("messageForm");
+const messageInput = document.getElementById("messageInput");
+const sendMessageBtn = document.getElementById("sendMessageBtn");
+const messageStatus = document.getElementById("messageStatus");
 
 const savedPassword = localStorage.getItem(passwordKey);
 
@@ -31,6 +36,45 @@ refreshBtn.addEventListener("click", () => {
   loadUsers(passwordInput.value.trim());
 });
 
+messageForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const password = passwordInput.value.trim();
+  const message = messageInput.value.trim();
+
+  if (!message) {
+    setMessageStatus("Введи текст повідомлення.");
+    return;
+  }
+
+  sendMessageBtn.disabled = true;
+  setMessageStatus("Відправлення...");
+
+  try {
+    const response = await fetch("/api/send-message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-password": password
+      },
+      body: JSON.stringify({ message })
+    });
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Не вдалося відправити повідомлення.");
+    }
+
+    const result = data.result;
+    setMessageStatus(`Надіслано: ${result.sent}. Помилок: ${result.failed}.`);
+    messageInput.value = "";
+  } catch (error) {
+    setMessageStatus(error.message);
+  } finally {
+    sendMessageBtn.disabled = false;
+  }
+});
+
 async function loadUsers(password) {
   setStatus("Завантаження...");
 
@@ -53,12 +97,14 @@ async function loadUsers(password) {
     renderUsers(data.users || []);
     loginForm.hidden = true;
     refreshBtn.hidden = false;
+    messageSection.hidden = false;
     tableSection.hidden = false;
     setStatus(`Користувачів: ${data.users.length}`);
   } catch (error) {
     renderUsers([]);
     loginForm.hidden = false;
     refreshBtn.hidden = true;
+    messageSection.hidden = true;
     tableSection.hidden = true;
     setStatus(error.message);
   }
@@ -109,4 +155,8 @@ function formatDate(value) {
 
 function setStatus(message) {
   adminStatus.textContent = message;
+}
+
+function setMessageStatus(message) {
+  messageStatus.textContent = message;
 }

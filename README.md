@@ -48,6 +48,8 @@ https://your-vercel-app.vercel.app/admin.html
 - імʼя користувача
 - час останнього заходу
 
+Також з адмінки можна відправити повідомлення всім користувачам, які вже заходили в Mini App. Для цього використовується `BOT_TOKEN` і Telegram Bot API `sendMessage`.
+
 ## Кнопка Mini App у боті
 
 Створи локальний файл `.env` по прикладу `.env.example`:

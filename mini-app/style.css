@@ -64,26 +64,42 @@ button:active {
   margin-bottom: 24px;
 }
 
-.admin-login {
+.admin-login,
+.admin-message form {
   display: grid;
   gap: 10px;
   max-width: 420px;
 }
 
-.admin-login label {
+.admin-login label,
+.admin-message label {
   font-size: 14px;
   font-weight: 700;
 }
 
-input {
+input,
+textarea {
   width: 100%;
   min-height: 46px;
-  padding: 0 12px;
+  padding: 12px;
   border: 1px solid var(--tg-theme-hint-color, #c7cbd1);
   border-radius: 8px;
   font: inherit;
   color: var(--tg-theme-text-color, #151515);
   background: var(--tg-theme-secondary-bg-color, #ffffff);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.admin-message {
+  margin: 0 0 24px;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }
 
 .small-button {
